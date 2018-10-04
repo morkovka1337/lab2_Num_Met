@@ -34,13 +34,14 @@ class MyWin(QMainWindow, Ui_MainWindow):
     def MyFunction(self):
         u0 = float(self.textEdit_3.toPlainText())
         h = float(self.textEdit_4.toPlainText())
-        x0 = float(self.textEdit_5.toPlainText())
+        #x0 = float(self.textEdit_5.toPlainText())
+
         n = int(self.textEdit_6.toPlainText())
         eps = float(self.textEdit_7.toPlainText())
         a = float(self.textEdit_8.toPlainText())
         b = float(self.textEdit_9.toPlainText())
         #self.tableWidget.insertRow(0)
-        Math_Part.Math_Part.bilding(self, n, u0, h, x0, a, b, eps)
+        Math_Part.Math_Part.bilding(self, n, u0, h, a, b, eps)
         #self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("hi"))
 
 
