@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 import math
 # Импортируем наш интерфейс из файла
 from new_label import *

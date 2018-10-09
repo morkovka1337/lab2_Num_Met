@@ -6,7 +6,10 @@ from new_label import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtWidgets, QtGui, QtCore
 from main import MyWin
-#######################################
+import tkinter
+from tkinter import messagebox
+
+
 class Math_Part(Ui_MainWindow):
 
     def bilding(self, n, u, h, a, b, eps):
@@ -119,8 +122,11 @@ class Math_Part(Ui_MainWindow):
                 abs_u = abs_solution(abs_x, const)
                 ax.plot([old_abs_x, abs_x], [old_abs_u, abs_u], '-r')
             self.progressBar.setProperty("value", 100*(i/n))
+            if x + h > b:
+                self.progressBar.setProperty("value", 100)
+                break
         if item == "Test":
-            self.tableWidget.setItem(i, 11, QtWidgets.QTableWidgetItem(str(abs(abs_u - u))))
+            self.tableWidget.setItem(n, 11, QtWidgets.QTableWidgetItem(str(abs(abs_u - u))))
             self.tableWidget.setItem(n, 7, QtWidgets.QTableWidgetItem(str(abs_u)))
             self.tableWidget.setItem(n, 8, QtWidgets.QTableWidgetItem(str(abs_x)))
         self.tableWidget.setItem(n, 1, QtWidgets.QTableWidgetItem(str(u)))
