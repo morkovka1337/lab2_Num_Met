@@ -2,6 +2,7 @@ import sys
 import math
 # Импортируем наш интерфейс из файла
 from new_label import *
+from numpy import float64
 from PyQt5 import QtWidgets, QtGui, QtCore
 from MyMplCanc import MtMplCanv
 import Math_Part
@@ -32,14 +33,14 @@ class MyWin(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(self.MyFunction)
 
     def MyFunction(self):
-        u0 = float(self.textEdit_3.toPlainText())
-        h = float(self.textEdit_4.toPlainText())
+        u0 = float64(self.textEdit_3.toPlainText())
+        h = float64(self.textEdit_4.toPlainText())
         # x0 = float(self.textEdit_5.toPlainText())
         n = int(self.textEdit_6.toPlainText())
-        eps = float(self.textEdit_7.toPlainText())
-        a = float(self.textEdit_8.toPlainText())
-        b = float(self.textEdit_9.toPlainText())
-        d = float(self.textEdit_2.toPlainText())
+        eps = float64(self.textEdit_7.toPlainText())
+        a = float64(self.textEdit_8.toPlainText())
+        b = float64(self.textEdit_9.toPlainText())
+        d = float64(self.textEdit_2.toPlainText())
         if self.comboBox.currentText() == "Test":
             self.label.setText("du/dx = 7*u\nu(0) = u0")
         if self.comboBox.currentText() == "Main 1":
@@ -59,4 +60,7 @@ if __name__=="__main__":
     app = QtWidgets.QApplication(sys.argv)
     myapp = MyWin()
     myapp.show()
-    sys.exit(app.exec_())
+    try: 
+        sys.exit(app.exec_())
+    except SystemExit:
+        ...

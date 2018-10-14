@@ -1,6 +1,7 @@
 import math
 import decimal
 import pylab
+from numpy import float64
 from matplotlib import mlab
 from matplotlib.figure import Figure
 from new_label import Ui_MainWindow
@@ -61,7 +62,7 @@ class Math_Part(Ui_MainWindow):
             k2 = f(x + step / 2, u + (step / 2) *k1)
             k3 = f(x + step / 2, u + (step / 2) * k2)
             k4 = f(x + step, u + step * k3)
-            return u + (step / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
+            return (u + ((step / 6) * (k1 + 2 * k2 + 2 * k3 + k4)))
 
         ##################################################
         def new_point(step, x, u, number_r):
@@ -82,13 +83,13 @@ class Math_Part(Ui_MainWindow):
 
             secwin.tableWidget.setItem(number_r, 3, QtWidgets.QTableWidgetItem(str(add_u)))
             secwin.tableWidget.setItem(number_r, 4, QtWidgets.QTableWidgetItem(str(add_x)))
-            secwin.tableWidget.setItem(number_r, 7, QtWidgets.QTableWidgetItem(str(S)))
+            secwin.tableWidget.setItem(number_r, 7, QtWidgets.QTableWidgetItem(str(abs(S))))
             secwin.tableWidget.setItem(number_r, 6, QtWidgets.QTableWidgetItem(str(new_u - add_u)))
             if self.checkBox.isChecked():
                 if abs(S) >= eps / 16 and abs(S) <= eps:
                     print("save point")
                     hlist.append(h)
-                    Mark_list.append(S)
+                    Mark_list.append(abs(S))
                     return new_x, new_u
                 if abs(S) < eps / 16:
                     print("save point, but change step")
@@ -97,7 +98,7 @@ class Math_Part(Ui_MainWindow):
                     cnt_g += 1
                     cnt_g_list.append(cnt_g)
                     hlist.append(h)
-                    Mark_list.append(S)
+                    Mark_list.append(abs(S))
                     return new_x, new_u
                 if abs(S) > eps:
                     print("Fail")
@@ -108,7 +109,7 @@ class Math_Part(Ui_MainWindow):
                     return new_point(h, x, u, number_r)
             else:
                 hlist.append(h)
-                Mark_list.append(S)
+                Mark_list.append(abs(S))
                 return new_x, new_u
         if self.checkBox_2.isChecked():
             ax.clear()
@@ -117,8 +118,8 @@ class Math_Part(Ui_MainWindow):
         xlist.append(x)
         ulist.append(u)
         abs_x, abs_u= x, abs_solution(x, const)
-        ax.plot([0, 0], [0, 0], '-b', label = ("number", x0, u0))
-        ax.plot([0, 0], [0, 0], 'r--', markersize = 0.5, label = ("absolute", x0, u0))
+        #ax.plot([0, 0], [0, 0], '-b', label = ("number", x0, u0))
+        #ax.plot([0, 0], [0, 0], 'r--', markersize = 0.5, label = ("absolute", x0, u0))
         for i in range(n):
             old_x, old_u = x, u
             secwin.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(str(old_u)))
@@ -130,11 +131,9 @@ class Math_Part(Ui_MainWindow):
             if x > d:
                 self.progressBar.setValue(n)
                 break
-            try:
-                x, u = new_point(h, old_x, old_u, i + 1)
-            except OverflowError:
-                self.progressBar.setValue(n)
-                break
+            x, u = new_point(h, old_x, old_u, i + 1)
+
+            
             xlist.append(x)
             ulist.append(u)
             ax.plot([old_x, x], [old_u, u], '-b')
@@ -174,5 +173,5 @@ class Math_Part(Ui_MainWindow):
             secwin.label_19.setText("Общ кол-во увел. = " + str(max(cnt_g_list)))
             secwin.label_20.setText("Общ кол-во уменьш. = " + str(max(cnt_l_list)))
         ax.grid(True)
-        ax.legend()
+        ax.legend((["number", x0, u0], ["absolute", x0, u0]))
         self.canvas.draw()
