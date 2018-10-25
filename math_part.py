@@ -124,7 +124,7 @@ class mathpart(Ui_MainWindow):
             beg_point_u1 = np.arange(u10 - 1, u10 + 1.2, 0.5)
             beg_point_u2 = np.arange(u20 - 1, u20 + 1, 0.3)
             x_PS = x0
-
+            self.progressBar.setMaximum(beg_point_u2[-1])
             for i in beg_point_u2:
                 for j in beg_point_u1:
                     u1list_PS = []
@@ -139,6 +139,7 @@ class mathpart(Ui_MainWindow):
                         u1list_PS.append(v1)
                         u2list_PS.append(v2)
                     ax_PS.plot(u1list_PS, u2list_PS, '-b') 
+                    self.progressBar.setValue(i)
                     x_PS = x0
 
 
@@ -194,7 +195,7 @@ class mathpart(Ui_MainWindow):
             ax_1.plot(xlist, u2list, '-y')
 
         phase_plane(u10, u20, x0)
-        self.progressBar.setValue(100)
+        
         secwin.label_10.setText("Максимальная оценка ЛП 1 = " + str(round(max(S1list), 9)))
         secwin.label_11.setText("Максимальная оценка ЛП 2 = " + str(round(max(S2list), 15)))
         if self.checkBox.isChecked():
