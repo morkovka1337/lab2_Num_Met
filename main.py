@@ -40,11 +40,8 @@ class MyWin(QMainWindow, Ui_MainWindow):
         
         self.pushButton.clicked.connect(self.MyFunction)
     def MyFunction(self):
-        p = float64(self.textEdit.toPlainText())
-        v = float64(self.textEdit_2.toPlainText())
-        y = float64(self.textEdit_3.toPlainText())
-        k = float64(self.textEdit_4.toPlainText())
-        c = float64(self.textEdit_5.toPlainText())
+        a = float64(self.textEdit.toPlainText())
+        b = float64(self.textEdit_2.toPlainText())
 
         u10 = float64(self.textEdit_6.toPlainText())
         u20 = float64(self.textEdit_7.toPlainText())
@@ -55,7 +52,7 @@ class MyWin(QMainWindow, Ui_MainWindow):
         h = float64(self.textEdit_11.toPlainText())
         
         self.sec_win = second_window(self)
-        math_part.mathpart.building(self, p, v, y, k, c, u10, u20, eps, d, x0, h, self.sec_win)
+        math_part.mathpart.building(self, a, b, u10, u20, eps, d, x0, h, self.sec_win)
 
 class second_window(QMainWindow, Ui_MainWindow_tab):
     def __init__(self, parent=None, *args, **kwargs):

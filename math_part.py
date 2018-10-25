@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 class mathpart(Ui_MainWindow):
 
-    def building(self, p, v, y, k, c, u10, u20, eps, d, x0, h, secwin):
+    def building(self, a, b, u10, u20, eps, d, x0, h, secwin):
 
         count_div, count_mul = 0, 0
         s1, s2 = 0, 0
@@ -27,10 +27,10 @@ class mathpart(Ui_MainWindow):
         secwin.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(u20)))
 
         def du1(u1, u2):
-            return p + k * (u1**2 /u2) - y * u1
+            return u1
 
         def du2(u1, u2):
-            return c * (u1**2) - v * u2
+            return -b - a * math.sqrt(1 + u1**2)
         
         def calc_coef_for_system(du1, du2, u1, u2, step):
             q = [[0] * 2] * 5
@@ -38,17 +38,14 @@ class mathpart(Ui_MainWindow):
             res[0][0] = du1(u1, u2)
             res[0][1] = du2(u1, u2)
             
-            res[1][0] = du1(u1 + step * res[0][0] / 3, u2 + step * res[0][0] / 3)
-            res[1][1] = du2(u1 + step * res[0][1] / 3, u2 + step * res[0][1] / 3)
+            res[1][0] = du1(u1 + step * res[0][0] / 2, u2 + step * res[0][0] / 2)
+            res[1][1] = du2(u1 + step * res[0][1] / 2, u2 + step * res[0][1] / 2)
             
-            res[2][0] = du1(u1 + step * (res[0][0] + res[1][0]) / 6, u2 + step * (res[0][0] + res[1][0]) / 6)
-            res[2][1] = du2(u1 + step * (res[0][1] + res[1][1]) / 6, u2 + step * (res[0][1] + res[1][1]) / 6)
+            res[2][0] = du1(u1 + step * res[1][0] / 2, u2 + step * res[1][0] / 2)
+            res[2][1] = du2(u1 + step * res[1][1] / 2, u2 + step * res[1][1] / 2)
 
-            res[3][0] = du1(u1 + step * (res[0][0] + 3 * res[2][0]) / 8, u2 + step * (res[0][0] + 3 * res[2][0]) / 8)
-            res[3][1] = du2(u1 + step * (res[0][1] + 3 * res[2][1]) / 8, u2 + step * (res[0][1] + 3 * res[2][1]) / 8)
-
-            res[4][0] = du1(u1 + step * (res[0][0] - 3 * res[2][0] + 4 * res[3][0]) / 2, u2 + step * (res[0][0] - 3 * res[2][0] + 4 * res[3][0]) / 2)
-            res[4][1] = du2(u1 + step * (res[0][1] - 3 * res[2][1] + 4 * res[3][1]) / 2, u2 + step * (res[0][1] - 3 * res[2][1] + 4 * res[3][1]) / 2)
+            res[3][0] = du1(u1 + step * res[2][0], u2 + step * res[2][0])
+            res[3][1] = du2(u1 + step * res[2][1], u2 + step * res[2][1])
 
             return res
             
@@ -57,15 +54,27 @@ class mathpart(Ui_MainWindow):
             secwin.tableWidget.setRowCount(number_r+1)
             x_new = x + h
             h_list.append(h)
+            
             K = calc_coef_for_system(du1, du2, u1, u2, h)
 
-            s1 = h * (2 * K[0][0] - 9 * K[2][0] + 8 * K[3][0] - K[4][0]) / 30
-            s2 = h * (2 * K[0][1] - 9 * K[2][1] + 8 * K[3][1] - K[4][1]) / 30
+            u1_new = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_new = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
             
+            K = calc_coef_for_system(du1, du2, u1, u2, h/2)
+
+            u1_half = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_half = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            
+            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h/2)
+
+            u1_half = u1_half + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_half = u2_half + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+
+            s1 = (u1_new - u1_half) * 16.0 / 15.0
+            s2 = (u2_new - u2_half)* 16.0 / 15.0
+
             secwin.tableWidget.setItem(number_r, 4, QtWidgets.QTableWidgetItem(str(abs(s1))))
             secwin.tableWidget.setItem(number_r, 5, QtWidgets.QTableWidgetItem(str(abs(s2))))
-            u1_new = u1 + h * (K[0][0] + 4 * K[3][0] + K[4][0]) / 6
-            u2_new = u2 + h * (K[0][1] + 4 * K[3][1] + K[4][1]) / 6
 
             secwin.tableWidget.setItem(number_r, 0, QtWidgets.QTableWidgetItem(str(number_r)))
             secwin.tableWidget.setItem(number_r, 1, QtWidgets.QTableWidgetItem(str(x_new)))
@@ -94,14 +103,24 @@ class mathpart(Ui_MainWindow):
         def new_point_for_PS(x, u1, u2):
             nonlocal h0
             x_new = x + h0
-            K = calc_coef_for_system(du1, du2, u1, u2, h0)
 
-            s1 = h0 * (2 * K[0][0] - 9 * K[2][0] + 8 * K[3][0] - K[4][0]) / 30
-            s2 = h0 * (2 * K[0][1] - 9 * K[2][1] + 8 * K[3][1] - K[4][1]) / 30
+            K = calc_coef_for_system(du1, du2, u1, u2, h)
 
+            u1_new = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_new = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            
+            K = calc_coef_for_system(du1, du2, u1, u2, h/2)
 
-            u1_new = u1 + h0 * (K[0][0] + 4 * K[3][0] + K[4][0]) / 6
-            u2_new = u2 + h0 * (K[0][1] + 4 * K[3][1] + K[4][1]) / 6
+            u1_half = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_half = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            
+            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h/2)
+
+            u1_half = u1_half + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_half = u2_half + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+
+            s1 = (u1_new - u1_half) * 16.0 / 15.0
+            s2 = (u2_new - u2_half)* 16.0 / 15.0
 
             if self.checkBox.isChecked():
                 if abs(s1) <= eps and abs(s2) <= eps and abs(s1) >= eps/16 and abs(s2) >= eps/16:
@@ -121,8 +140,8 @@ class mathpart(Ui_MainWindow):
 
 
         def phase_plane(u10, u20, x0):
-            beg_point_u1 = np.arange(u10 - 1, u10 + 1.2, 0.5)
-            beg_point_u2 = np.arange(u20 - 1, u20 + 1, 0.3)
+            beg_point_u1 = np.arange(u10 - 1, u10 + 100, 20)
+            beg_point_u2 = np.arange(u20 - 1, u20 + 100, 25)
             x_PS = x0
             self.progressBar.setMaximum(beg_point_u2[-1])
             for i in beg_point_u2:
@@ -133,7 +152,7 @@ class mathpart(Ui_MainWindow):
                     u2list_PS.append(i)
                     u1list_PS.append(j)
                     v1, v2 = j, i
-                    while x_PS < d:
+                    while v1 < 100 and v2 < 100 and v1 > -100 and v2 > -100:
                         x_PS, v1, v2 = new_point_for_PS(x_PS, v1, v2)
                         xlist_PS.append(x_PS)
                         u1list_PS.append(v1)
@@ -157,20 +176,17 @@ class mathpart(Ui_MainWindow):
         x = x0
         i = 0
         secwin.label.setText("Начальное время = " + str(x))
-        secwin.label_2.setText("Начальная конц. активатора = " + str(v1))
-        secwin.label_3.setText("Начальная конц. ингибитора = " + str(v2))
-        secwin.label_4.setText("Плотность активатора k = " + str(p))
-        secwin.label_5.setText("Скорость самообразования активатора k = " + str(k))
-        secwin.label_6.setText("скорость самообразования ингибитора c = " + str(c))
-        secwin.label_7.setText("Естественный распад активатора v = " + str(v))
-        secwin.label_8.setText("Естественный распад ингибитора y = " + str(y))
+        secwin.label_2.setText("Начальный u" + str(v1))
+        secwin.label_3.setText("Начальнай u' = " + str(v2))
+        secwin.label_4.setText("a = " + str(a))
+        secwin.label_5.setText("b = " + str(b))
         secwin.label_9.setText("Контроль локальной погрешности Eps = " + str(eps))
         
-        ax_1.set_ylabel("Activator")
-        ax_2.set_ylabel("Inhibitor")
+        ax_1.set_ylabel("u")
+        ax_2.set_ylabel("u'")
         ax_2.set_xlabel("Time")
-        ax_PS.set_xlabel("Inhibitor")
-        ax_PS.set_ylabel("Activator")
+        ax_PS.set_xlabel("u")
+        ax_PS.set_ylabel("u'")
         ax_PS.set_title("Phase plane")
         xlist, u1list, u2list = [], [], []
         u1list.append(u10)
