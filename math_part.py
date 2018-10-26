@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 class mathpart(Ui_MainWindow):
 
-    def building(self, a, b, u10, u20, eps, d, x0, h, secwin):
+    def building(self, a, b, u10, u20, eps, d, x0, h, lim1, lim2, limx, step1, step2, secwin):
 
         count_div, count_mul = 0, 0
         s1, s2 = 0, 0
@@ -21,7 +21,7 @@ class mathpart(Ui_MainWindow):
         S1list, S2list = [], []
         S1list.append(s1)
         S2list.append(s2)
-        secwin.tableWidget.setItem(0, 6, QtWidgets.QTableWidgetItem(str(h)))
+        secwin.tableWidget.setItem(0, 6, QtWidgets.QTableWidgetItem(str(h0)))
         secwin.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str(x0)))
         secwin.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(str(u10)))
         secwin.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(u20)))
@@ -50,25 +50,25 @@ class mathpart(Ui_MainWindow):
             return res
             
         def next_point(x, u1, u2, number_r):
-            nonlocal h
+            nonlocal h0
             secwin.tableWidget.setRowCount(number_r+1)
-            x_new = x + h
-            h_list.append(h)
+            x_new = x + h0
+            h_list.append(h0)
             
-            K = calc_coef_for_system(du1, du2, u1, u2, h)
+            K = calc_coef_for_system(du1, du2, u1, u2, h0)
 
-            u1_new = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_new = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_new = u1 + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_new = u2 + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
             
-            K = calc_coef_for_system(du1, du2, u1, u2, h/2)
+            K = calc_coef_for_system(du1, du2, u1, u2, h0/2)
 
-            u1_half = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_half = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_half = u1 + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 12
+            u2_half = u2 + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 12
             
-            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h/2)
+            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h0/2)
 
-            u1_half = u1_half + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_half = u2_half + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_half = u1_half + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 12
+            u2_half = u2_half + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 12
 
             s1 = (u1_new - u1_half) * 16.0 / 15.0
             s2 = (u2_new - u2_half)* 16.0 / 15.0
@@ -82,18 +82,18 @@ class mathpart(Ui_MainWindow):
             secwin.tableWidget.setItem(number_r, 3, QtWidgets.QTableWidgetItem(str(u2_new)))
             S1list.append(abs(s1))
             S2list.append(abs(s2))
-            
+
             nonlocal count_div, count_mul
             if self.checkBox.isChecked():
                 if abs(s1) >= eps/16 and abs(s2) >= eps/16 and abs(s1) <= eps and abs(s2) <= eps:
                     return x_new, u1_new, u2_new
                 elif abs(s1) > eps or abs(s2) > eps:
                     count_div += 1
-                    h /= 2
+                    h0 /= 2
                     return next_point(x, u1, u2, number_r)
                 elif abs(s1) < eps/16 and abs(s2) < eps/16:
                     count_mul += 1
-                    h *= 2
+                    h0 *= 2
                     return x_new, u1_new, u2_new
                 else: 
                     return x_new, u1_new, u2_new
@@ -105,20 +105,20 @@ class mathpart(Ui_MainWindow):
             nonlocal h0
             x_new = x + h0
 
-            K = calc_coef_for_system(du1, du2, u1, u2, h)
+            K = calc_coef_for_system(du1, du2, u1, u2, h0)
 
-            u1_new = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_new = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_new = u1 + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
+            u2_new = u2 + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
             
-            K = calc_coef_for_system(du1, du2, u1, u2, h/2)
+            K = calc_coef_for_system(du1, du2, u1, u2, h0/2)
 
-            u1_half = u1 + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_half = u2 + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_half = u1 + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 12
+            u2_half = u2 + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 12
             
-            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h/2)
+            K = calc_coef_for_system(du1, du2, u1_half, u2_half, h0/2)
 
-            u1_half = u1_half + h * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 6
-            u2_half = u2_half + h * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 6
+            u1_half = u1_half + h0 * (K[0][0] + 2 * K[1][0] + 2 * K[2][0] + K[3][0]) / 12
+            u2_half = u2_half + h0 * (K[0][1] + 2 * K[1][1] + 2 * K[2][1] + K[3][1]) / 12
 
             s1 = (u1_new - u1_half) * 16.0 / 15.0
             s2 = (u2_new - u2_half)* 16.0 / 15.0
@@ -141,8 +141,8 @@ class mathpart(Ui_MainWindow):
 
 
         def phase_plane(u10, u20, x0):
-            beg_point_u1 = np.arange(u10 - 1, u10 + 100, 20)
-            beg_point_u2 = np.arange(u20 - 1, u20 + 100, 25)
+            beg_point_u1 = np.arange(u10-lim1, u10 + lim1, step1, dtype = np.float64)
+            beg_point_u2 = np.arange(u20-lim2, u20 + lim2, step2, dtype = np.float64)
             x_PS = x0
             self.progressBar.setMaximum(beg_point_u2[-1])
             for i in beg_point_u2:
@@ -153,12 +153,12 @@ class mathpart(Ui_MainWindow):
                     u2list_PS.append(i)
                     u1list_PS.append(j)
                     v1, v2 = j, i
-                    while v1 < 100 and v2 < 100 and v1 > -100 and v2 > -100:
+                    while abs(v1) < lim1 and abs(v2) < lim2 and x_PS < limx:
                         x_PS, v1, v2 = new_point_for_PS(x_PS, v1, v2)
                         xlist_PS.append(x_PS)
                         u1list_PS.append(v1)
                         u2list_PS.append(v2)
-                    ax_PS.plot(u1list_PS, u2list_PS, '-b') 
+                    ax_PS.plot(u2list_PS, u1list_PS, '-b') 
                     self.progressBar.setValue(i)
                     x_PS = x0
 
@@ -186,17 +186,17 @@ class mathpart(Ui_MainWindow):
         ax_1.set_ylabel("u")
         ax_2.set_ylabel("u'")
         ax_2.set_xlabel("Time")
-        ax_PS.set_xlabel("u")
-        ax_PS.set_ylabel("u'")
+        ax_PS.set_xlabel("u'")
+        ax_PS.set_ylabel("u")
         ax_PS.set_title("Phase plane")
         xlist, u1list, u2list = [], [], []
         u1list.append(u10)
         u2list.append(u20)
         xlist.append(x0)
         
-        while x < d:
+        while x < d and abs(v1) < 200 and abs(v2) < 200:
             x, v1, v2 = next_point(x, v1, v2, i + 1)                    
-            secwin.tableWidget.setItem(i + 1, 6, QtWidgets.QTableWidgetItem(str(h)))
+            secwin.tableWidget.setItem(i + 1, 6, QtWidgets.QTableWidgetItem(str(h0)))
             secwin.tableWidget.setItem(i + 1, 7, QtWidgets.QTableWidgetItem(str(count_div)))
             secwin.tableWidget.setItem(i + 1, 8, QtWidgets.QTableWidgetItem(str(count_mul)))   
             xlist.append(x)

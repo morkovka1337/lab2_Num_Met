@@ -50,9 +50,15 @@ class MyWin(QMainWindow, Ui_MainWindow):
         eps = float64(self.textEdit_8.toPlainText())
         d = float64(self.textEdit_9.toPlainText())
         h = float64(self.textEdit_11.toPlainText())
-        
+
+        lim1 = float64(self.textEdit_3.toPlainText())
+        lim2 = float64(self.textEdit_4.toPlainText())
+        step1 = float64(self.textEdit_13.toPlainText())
+        step2 = float64(self.textEdit_12.toPlainText())
+        limx = float64(self.textEdit_5.toPlainText())
+
         self.sec_win = second_window(self)
-        math_part.mathpart.building(self, a, b, u10, u20, eps, d, x0, h, self.sec_win)
+        math_part.mathpart.building(self, a, b, u10, u20, eps, d, x0, h, lim1, lim2, limx, step1, step2, self.sec_win)
 
 class second_window(QMainWindow, Ui_MainWindow_tab):
     def __init__(self, parent=None, *args, **kwargs):
