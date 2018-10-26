@@ -179,12 +179,12 @@
     </column>
     <column>
      <property name="text">
-      <string>Активатор</string>
+      <string>u</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Ингибитор</string>
+      <string>u'</string>
      </property>
     </column>
     <column>
@@ -298,7 +298,7 @@
      <x>0</x>
      <y>0</y>
      <width>756</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

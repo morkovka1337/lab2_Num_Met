@@ -27,13 +27,13 @@ class mathpart(Ui_MainWindow):
         secwin.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(u20)))
 
         def du1(u1, u2):
-            return u1
+            return u2
 
         def du2(u1, u2):
-            return -b - a * math.sqrt(1 + u1**2)
+            return -b - a * math.sqrt(1 + u2**2)
         
         def calc_coef_for_system(du1, du2, u1, u2, step):
-            q = [[0] * 2] * 5
+            q = [[0] * 2] * 4
             res = np.array(q, dtype = np.float64)
             res[0][0] = du1(u1, u2)
             res[0][1] = du2(u1, u2)
@@ -82,6 +82,7 @@ class mathpart(Ui_MainWindow):
             secwin.tableWidget.setItem(number_r, 3, QtWidgets.QTableWidgetItem(str(u2_new)))
             S1list.append(abs(s1))
             S2list.append(abs(s2))
+            
             nonlocal count_div, count_mul
             if self.checkBox.isChecked():
                 if abs(s1) >= eps/16 and abs(s2) >= eps/16 and abs(s1) <= eps and abs(s2) <= eps:

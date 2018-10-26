@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tab_widg.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.2
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -108,7 +108,7 @@ class Ui_MainWindow_tab(object):
         self.label_15.setObjectName("label_15")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 756, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 756, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -128,9 +128,9 @@ class Ui_MainWindow_tab(object):
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Время"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Активатор"))
+        item.setText(_translate("MainWindow", "u"))
         item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Ингибитор"))
+        item.setText(_translate("MainWindow", "u\'"))
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Оценка ЛП 1 коорд."))
         item = self.tableWidget.horizontalHeaderItem(5)
